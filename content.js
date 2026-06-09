@@ -4,22 +4,23 @@ function collectLinks() {
   );
 }
 
-function initialScan() {
-  const links = collectLinks();
-  console.log("PhishySites: found", links.length, "links");
+function scan() {
+  chrome.storage.local.get('blockedSites', (result) => {
+    const blockedSites = result.blockedSites || [];
+    const links = collectLinks();
 
-  for (const a of links) {
-    const result = checkUrl(a.href);
-    if (result.flagged) {
-      console.warn("⚠️ SUSPICIOUS:", a.href, "—", result.reason);
+    for (const a of links) {
+      const hostname = new URL(a.href).hostname;
+      if (blockedSites.includes(hostname)) {
+        console.warn("⚠️ BLOCKED SITE:", a.href);
+      }
+
+      const result = checkUrl(a.href);
+      if (result.flagged) {
+        console.warn("⚠️ SUSPICIOUS:", a.href, "—", result.reason);
+      }
     }
-  }
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initialScan);
-} else {
-  initialScan();
+  });
 }
 
 function checkUrl(url) {
@@ -45,4 +46,16 @@ function checkUrl(url) {
   }
 
   return { flagged: false };
+}
+
+const observer = new MutationObserver(() => {
+  scan();
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", scan);
+} else {
+  scan();
 }

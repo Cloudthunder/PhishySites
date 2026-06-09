@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extension Popup</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    body {
+      width: 250px;
+      height: 280px;
+      background: #16161A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #EDEDF0;
+      overflow: hidden;
+    }
+ 
+    /* Subtle ambient glow behind the card */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      opacity: 0;
+    }
+    body.on::before { opacity: 1; }
+ 
+    .card {
+      background: #1E1E26;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+ 
+    .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #7C3AED, #5B21B6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.35);
+    }
+    .icon svg { width: 24px; height: 24px; }
+ 
+    .label-group {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .label-group h1 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #EDEDF0;
+    }
+    .label-group p {
+      font-size: 12px;
+      color: #8888A0;
+      line-height: 1.5;
+    }
+ 
+    /* ── Toggle ── */
+    .toggle-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+ 
+    .toggle {
+      position: relative;
+      width: 64px;
+      height: 34px;
+      cursor: pointer;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+ 
+    .track {
+      position: absolute;
+      inset: 0;
+      border-radius: 34px;
+      background: #3F3F55;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+    }
+    .toggle input:checked ~ .track {
+      background: #7C3AED;
+      box-shadow: 0 0 16px rgba(124,58,237,0.55), 0 0 40px rgba(124,58,237,0.2);
+    }
+ 
+    .thumb {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .toggle input:checked ~ .thumb {
+      transform: translateX(30px);
+    }
+ 
+    .status {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8888A0;
+      transition: color 0.3s ease;
+    }
+    body.on .status { color: #A78BFA; }
+ 
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 10px;
+      color: #44445A;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body id="body">
+  <div class="card">
+    <div class="icon">
+      <img src="icon.png" alt="Extension Icon" />
+    </div>
+ 
+    <div class="label-group">
+      <h1>Phishy Site Guard</h1>
+      <p>Toggle to enable on this page</p>
+    </div>
+ 
+    <div class="toggle-wrapper">
+      <label class="toggle" aria-label="Enable extension">
+        <input type="checkbox" id="toggle" />
+        <span class="track"></span>
+        <span class="thumb"></span>
+      </label>
+      <span class="status" id="status">Off</span>
+    </div>
+    <span class="footer">v1.0.0</span>
+  </div>
+ 
+  <script src="popup.js"></script>
+</body>
+</html>
+ 

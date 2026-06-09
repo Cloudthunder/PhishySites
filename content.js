@@ -6,7 +6,7 @@ function collectLinks() {
 
 function initialScan() {
   const links = collectLinks();
-  console.log("Link Shield: found", links.length, "links");
+  console.log("PhishySites: found", links.length, "links");
   console.log(links.map(a => a.href));
 }
 
